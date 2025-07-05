@@ -1,239 +1,219 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Chatbot Altice con Contexto Básico</title>
-<style>
-  /* Misma base de estilos que antes */
-  * { box-sizing: border-box; }
-  body, html {
-    margin: 0; padding: 0; height: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  #chat-container {
-    background: rgba(255,255,255,0.95);
-    width: 450px;
-    max-width: 90%;
-    height: 600px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  header {
-    background: #003a75;
-    color: white;
-    padding: 18px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
-  header img {
-    height: 36px;
-  }
-  #messages {
-    flex-grow: 1;
-    padding: 20px;
-    overflow-y: auto;
-    background: #f9f9f9;
-  }
-  .message {
-    margin-bottom: 14px;
-    padding: 14px 18px;
-    border-radius: 20px;
-    max-width: 75%;
-    line-height: 1.4;
-    font-size: 1rem;
-    animation: fadeIn 0.5s ease forwards;
-    word-wrap: break-word;
-  }
-  .user {
-    background: #0052cc;
-    color: white;
-    align-self: flex-end;
-    border-bottom-right-radius: 5px;
-  }
-  .bot {
-    background: #e1e1e1;
-    color: #222;
-    align-self: flex-start;
-    border-bottom-left-radius: 5px;
-  }
-  @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(10px);}
-    to {opacity: 1; transform: translateY(0);}
-  }
-  #input-area {
-    display: flex;
-    padding: 18px;
-    border-top: 1px solid #ddd;
-    background: white;
-  }
-  #input {
-    flex-grow: 1;
-    font-size: 1.1rem;
-    padding: 12px 16px;
-    border-radius: 30px;
-    border: 1px solid #bbb;
-    transition: border-color 0.3s;
-  }
-  #input:focus {
-    outline: none;
-    border-color: #0052cc;
-  }
-  #send-btn {
-    background: #0052cc;
-    border: none;
-    color: white;
-    font-weight: 600;
-    font-size: 1.1rem;
-    margin-left: 15px;
-    padding: 0 25px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  #send-btn:hover {
-    background: #003a75;
-  }
-
-  @media (max-width: 500px) {
-    #chat-container {
-      height: 90vh;
-      width: 100%;
-      border-radius: 0;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chatbot Altice - Ensanche Isabelita</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://i.ibb.co/fMh1jkq/ensanche-fondo.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-  }
-</style>
+    #chat-container {
+      width: 420px;
+      max-width: 90%;
+      height: 600px;
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    header {
+      background-color: #002855;
+      color: #fff;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    header img {
+      height: 30px;
+    }
+    #messages {
+      flex-grow: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background-color: #f4f4f4;
+    }
+    .message {
+      margin-bottom: 12px;
+      padding: 10px 14px;
+      border-radius: 18px;
+      max-width: 80%;
+      font-size: 0.95rem;
+      line-height: 1.3;
+      word-wrap: break-word;
+    }
+    .user {
+      background-color: #0052cc;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 5px;
+    }
+    .bot {
+      background-color: #e8e8e8;
+      color: #000;
+      align-self: flex-start;
+      border-bottom-left-radius: 5px;
+    }
+    #input-area {
+      padding: 10px;
+      border-top: 1px solid #ccc;
+      background: white;
+      display: flex;
+      flex-direction: column;
+    }
+    #options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .option-btn {
+      background-color: #004aad;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .option-btn:hover {
+      background-color: #003080;
+    }
+    #input {
+      display: none;
+    }
+    iframe {
+      width: 100%;
+      height: 200px;
+      border: none;
+    }
+  </style>
 </head>
 <body>
-<div id="chat-container" role="main" aria-live="polite" aria-label="Chatbot Altice Ensanche Isabelita">
-  <header>
-    <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="Altice Logo" />
-    Chatbot Altice - Ensanche Isabelita
-  </header>
-  <div id="messages"></div>
-  <div id="input-area">
-    <input type="text" id="input" placeholder="Escribe aquí tu consulta..." aria-label="Mensaje usuario" autocomplete="off" autofocus />
-    <button id="send-btn" aria-label="Enviar mensaje">Enviar</button>
+  <div id="chat-container">
+    <header>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Altice_logo.svg/2560px-Altice_logo.svg.png" alt="Altice logo" />
+      Chatbot Altice Isabelita
+    </header>
+    <div id="messages"></div>
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.7758264761883!2d-69.84802462562799!3d18.49243708260386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8ea56155f022bd7d%3A0x7e88cfb12dd90ae0!2sEnsanche%20Isabelita!5e0!3m2!1ses!2sdo!4v1720206598371!5m2!1ses!2sdo"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+    <div id="input-area">
+      <div id="options"></div>
+    </div>
   </div>
-</div>
 
-<script>
-  const messagesDiv = document.getElementById('messages');
-  const input = document.getElementById('input');
-  const sendBtn = document.getElementById('send-btn');
+  <script>
+    const messages = document.getElementById('messages');
+    const options = document.getElementById('options');
 
-  // Estado simple para contexto (puede ser 'normal' o 'esperando_confirmacion')
-  let conversationState = 'normal';
+    function addMessage(text, sender = 'bot') {
+      const msg = document.createElement('div');
+      msg.className = `message ${sender}`;
+      msg.textContent = text;
+      messages.appendChild(msg);
+      messages.scrollTop = messages.scrollHeight;
+    }
 
-  // Guarda y carga mensajes de sessionStorage
-  const savedMessages = JSON.parse(sessionStorage.getItem('chatMessages')) || [];
-  savedMessages.forEach(({ text, sender }) => addMessage(text, sender, false));
+    function showOptions(optionArray) {
+      options.innerHTML = '';
+      optionArray.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt.label;
+        btn.onclick = () => {
+          addMessage(opt.label, 'user');
+          handleOption(opt.value);
+        };
+        options.appendChild(btn);
+      });
+    }
 
-  function saveMessages() {
-    const msgs = [];
-    document.querySelectorAll('.message').forEach(msg => {
-      msgs.push({ text: msg.textContent, sender: msg.classList.contains('user') ? 'user' : 'bot' });
-    });
-    sessionStorage.setItem('chatMessages', JSON.stringify(msgs));
-  }
-
-  function addMessage(text, sender, save = true) {
-    const msgDiv = document.createElement('div');
-    msgDiv.classList.add('message', sender);
-    msgDiv.textContent = text;
-    messagesDiv.appendChild(msgDiv);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    if (save) saveMessages();
-  }
-
-  // Función para interpretar respuestas afirmativas
-  function isAffirmative(text) {
-    const affirmatives = ['si', 'sí', 'claro', 'por supuesto', 'correcto', 'afirmativo', 'sí, por favor', 'ok'];
-    return affirmatives.some(word => text.includes(word));
-  }
-  // Función para interpretar respuestas negativas
-  function isNegative(text) {
-    const negatives = ['no', 'nop', 'negativo', 'no gracias', 'nada'];
-    return negatives.some(word => text.includes(word));
-  }
-
-  function botResponse(msg) {
-    const message = msg.toLowerCase();
-
-    if (conversationState === 'esperando_confirmacion') {
-      if (isAffirmative(message)) {
-        conversationState = 'normal';
-        return 'Perfecto, te dejo el número de soporte Altice para Ensanche Isabelita: 809-200-1000. ¿Necesitas ayuda con algo más?';
-      } else if (isNegative(message)) {
-        conversationState = 'normal';
-        return 'Entendido. Si necesitas algo más, solo pregunta.';
-      } else {
-        return 'No entendí tu respuesta. Por favor, responde sí o no.';
+    function handleOption(value) {
+      switch (value) {
+        case 'inicio':
+          addMessage('Hola, soy el asistente virtual de Altice para el Ensanche Isabelita. ¿En qué puedo ayudarte hoy?');
+          showOptions([
+            { label: 'Problema con internet', value: 'internet' },
+            { label: 'Problema con llamadas', value: 'llamadas' },
+            { label: 'Horario de oficina', value: 'horario' },
+            { label: 'Contactar soporte', value: 'soporte' },
+            { label: 'Enviar ubicación', value: 'ubicacion' },
+          ]);
+          break;
+        case 'internet':
+          addMessage('¿Tu problema es lentitud o sin conexión?');
+          showOptions([
+            { label: 'Lentitud', value: 'lentitud' },
+            { label: 'Sin conexión', value: 'sinconexion' },
+            { label: 'Volver', value: 'inicio' }
+          ]);
+          break;
+        case 'lentitud':
+          addMessage('Reinicia tu router. Si el problema continúa, llama al 809-200-1000.');
+          showOptions([{ label: 'Volver al inicio', value: 'inicio' }]);
+          break;
+        case 'sinconexion':
+          addMessage('Verifica los cables. Si no funciona, contacta soporte Altice.');
+          showOptions([{ label: 'Contactar soporte', value: 'soporte' }, { label: 'Volver', value: 'inicio' }]);
+          break;
+        case 'llamadas':
+          addMessage('¿No puedes hacer llamadas o se cortan?');
+          showOptions([
+            { label: 'No puedo llamar', value: 'nocall' },
+            { label: 'Se corta la llamada', value: 'cortes' },
+            { label: 'Volver', value: 'inicio' }
+          ]);
+          break;
+        case 'nocall':
+          addMessage('Verifica que tengas señal y saldo. Contacta soporte si persiste.');
+          showOptions([{ label: 'Volver al inicio', value: 'inicio' }]);
+          break;
+        case 'cortes':
+          addMessage('Puede ser una falla de red. Contacta soporte Altice.');
+          showOptions([{ label: 'Contactar soporte', value: 'soporte' }, { label: 'Volver', value: 'inicio' }]);
+          break;
+        case 'horario':
+          addMessage('Altice Ensanche Isabelita abre de lunes a viernes, de 8:00 AM a 6:00 PM.');
+          showOptions([{ label: 'Volver al inicio', value: 'inicio' }]);
+          break;
+        case 'soporte':
+          addMessage('Puedes llamar al 809-200-1000 o visitar la oficina más cercana.');
+          showOptions([{ label: 'Volver al inicio', value: 'inicio' }]);
+          break;
+        case 'ubicacion':
+          addMessage('Por favor, comparte tu ubicación actual. (Simulado para fines demostrativos).');
+          showOptions([{ label: 'Ubicación enviada ✅', value: 'ubicacion_ok' }]);
+          break;
+        case 'ubicacion_ok':
+          addMessage('Gracias. Usaremos esta ubicación para revisar el problema.');
+          showOptions([{ label: 'Volver al inicio', value: 'inicio' }]);
+          break;
+        default:
+          addMessage('No entiendo esa opción.');
+          showOptions([{ label: 'Volver al inicio', value: 'inicio' }]);
+          break;
       }
     }
 
-    // Estado normal, buscar palabras clave
-    if (message.includes('internet') || message.includes('conexion') || message.includes('wifi') || message.includes('velocidad')) {
-      return '¿Tienes problemas con la conexión a internet? Prueba reiniciar tu router y verificar cables. ¿Sigue el problema?';
-    } 
-    else if (message.includes('telefono') || message.includes('llamada') || message.includes('linea')) {
-      return 'Para problemas con llamadas o línea telefónica, verifica las conexiones. ¿Quieres que te dé el número de soporte?';
-    }
-    else if (message.includes('averia') || message.includes('falla') || message.includes('problema') || message.includes('corte')) {
-      conversationState = 'esperando_confirmacion';
-      return 'Gracias por reportar la falla. ¿Quieres que te proporcione el número de soporte para que puedas comunicarte directamente?';
-    }
-    else if (message.includes('soporte') || message.includes('contacto')) {
-      return 'Puedes contactar al soporte de Altice llamando al 809-200-1000 o visitando la oficina local en Ensanche Isabelita.';
-    }
-    else if (message.includes('horario') || message.includes('atencion')) {
-      return 'El horario de atención en Ensanche Isabelita es lunes a viernes, 8:00 AM a 6:00 PM.';
-    }
-    else if (message.includes('gracias') || message.includes('muchas gracias')) {
-      return '¡Gracias a ti! Estoy aquí para ayudarte siempre.';
-    }
-    else if (message.includes('hola') || message.includes('buenos dias') || message.includes('buenas tardes')) {
-      return '¡Hola! Bienvenido al chatbot de Altice para Ensanche Isabelita. ¿En qué puedo ayudarte?';
-    }
-    else if (message.includes('adios') || message.includes('bye') || message.includes('hasta luego')) {
-      return '¡Hasta luego! Que tengas un excelente día.';
-    }
-    else {
-      return 'Disculpa, no entendí tu mensaje. Por favor pregunta sobre fallas, averías o soporte en Altice Ensanche Isabelita.';
-    }
-  }
-
-  function sendMessage() {
-    const text = input.value.trim();
-    if (!text) return;
-
-    addMessage(text, 'user');
-    input.value = '';
-    input.focus();
-
-    setTimeout(() => {
-      const reply = botResponse(text);
-      addMessage(reply, 'bot');
-    }, 700);
-  }
-
-  sendBtn.addEventListener('click', sendMessage);
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      sendMessage();
-    }
-  });
-</script>
+    // Iniciar conversación
+    handleOption('inicio');
+  </script>
 </body>
 </html>
