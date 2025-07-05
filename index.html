@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Chatbot Simulado Mejorado</title>
+<title>Chatbot Averías Altice - Ensanche Isabelita</title>
 <style>
   /* Reset y fuentes */
   * {
@@ -117,10 +117,10 @@
 <body>
 <header>
   <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" alt="Logo Chatbot" />
-  Chatbot Simulado Mejorado
+  Chatbot Averías Altice - Ensanche Isabelita
 </header>
 
-<div id="chatbox" role="main" aria-live="polite" aria-label="Chatbot de soporte">
+<div id="chatbox" role="main" aria-live="polite" aria-label="Chatbot de soporte para Altice en Ensanche Isabelita">
   <div id="messages" aria-relevant="additions"></div>
   <div id="input-area">
     <input
@@ -164,18 +164,33 @@
   function botResponse(msg) {
     const message = msg.toLowerCase();
 
-    if (message.includes('hola')) {
-      return '¡Hola! ¿En qué puedo ayudarte hoy?';
-    } else if (message.includes('falla')) {
-      return 'Lamento que tengas una falla. Por favor, proporciona más detalles.';
-    } else if (message.includes('internet')) {
-      return '¿Estás teniendo problemas con la conexión a internet?';
-    } else if (message.includes('gracias')) {
-      return '¡De nada! Estoy aquí para ayudarte.';
-    } else if (message.includes('adiós') || message.includes('bye')) {
-      return '¡Hasta luego! Que tengas un buen día.';
-    } else {
-      return 'Lo siento, no entendí eso. ¿Podrías reformularlo?';
+    // Respuestas personalizadas para fallas Altice en Ensanche Isabelita
+    if (message.includes('internet') || message.includes('conexion') || message.includes('wifi')) {
+      return 'Si tienes problemas con la conexión de internet en Ensanche Isabelita, por favor revisa que el router esté encendido y reinícialo. ¿El problema persiste?';
+    } 
+    else if (message.includes('telefono') || message.includes('llamada') || message.includes('linea')) {
+      return 'Para problemas con llamadas o línea telefónica en Ensanche Isabelita, verifica que el cable esté bien conectado. Si sigue el problema, por favor comunícate con el soporte de Altice al 809-200-1000.';
+    }
+    else if (message.includes('averia') || message.includes('falla') || message.includes('problema')) {
+      return 'Gracias por reportar la falla. Nuestro equipo de Altice en Ensanche Isabelita está trabajando para solucionar las averías. ¿Quieres que te proporcione el número de soporte?';
+    }
+    else if (message.includes('soporte') || message.includes('contacto')) {
+      return 'Puedes contactar al soporte de Altice llamando al 809-200-1000 o visitando la oficina local en Ensanche Isabelita.';
+    }
+    else if (message.includes('horario')) {
+      return 'El horario de atención del soporte Altice en Ensanche Isabelita es de lunes a viernes de 8:00 AM a 6:00 PM.';
+    }
+    else if (message.includes('gracias') || message.includes('muchas gracias')) {
+      return '¡De nada! Estamos para ayudarte.';
+    }
+    else if (message.includes('hola') || message.includes('buenos dias') || message.includes('buenas tardes')) {
+      return '¡Hola! Bienvenido al chatbot de Altice para Ensanche Isabelita. ¿En qué puedo ayudarte?';
+    }
+    else if (message.includes('adios') || message.includes('bye')) {
+      return '¡Gracias por contactarnos! Que tengas un excelente día.';
+    }
+    else {
+      return 'Disculpa, no entendí tu mensaje. Por favor, intenta preguntar sobre fallas, averías o soporte en Altice Ensanche Isabelita.';
     }
   }
 
