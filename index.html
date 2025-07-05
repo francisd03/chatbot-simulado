@@ -8,7 +8,7 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: url('https://i.ibb.co/fMh1jkq/ensanche-fondo.jpg') no-repeat center center fixed;
+      background: url('https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
       background-size: cover;
       display: flex;
       justify-content: center;
@@ -71,32 +71,46 @@
       border-top: 1px solid #ccc;
       background: white;
       display: flex;
-      flex-direction: column;
-    }
-    #options {
-      display: flex;
-      flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 8px;
     }
-    .option-btn {
+    #input {
+      flex-grow: 1;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+    }
+    #send-btn {
+      padding: 10px 16px;
       background-color: #004aad;
       color: white;
       border: none;
       border-radius: 20px;
+      cursor: pointer;
+    }
+    #send-btn:hover {
+      background-color: #003080;
+    }
+    #suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px;
+      background: #fff;
+      border-top: 1px solid #ddd;
+    }
+    .suggestion-btn {
+      background-color: #0074d9;
+      color: white;
+      border: none;
+      border-radius: 15px;
       padding: 6px 12px;
       cursor: pointer;
       font-size: 0.9rem;
     }
-    .option-btn:hover {
-      background-color: #003080;
-    }
-    #input {
-      display: none;
-    }
     iframe {
       width: 100%;
-      height: 200px;
+      height: 180px;
       border: none;
     }
   </style>
@@ -114,14 +128,18 @@
       loading="lazy"
       referrerpolicy="no-referrer-when-downgrade"
     ></iframe>
+    <div id="suggestions"></div>
     <div id="input-area">
-      <div id="options"></div>
+      <input id="input" type="text" placeholder="Escribe tu mensaje..." />
+      <button id="send-btn">Enviar</button>
     </div>
   </div>
 
   <script>
     const messages = document.getElementById('messages');
-    const options = document.getElementById('options');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('send-btn');
+    const suggestions = document.getElementById('suggestions');
 
     function addMessage(text, sender = 'bot') {
       const msg = document.createElement('div');
@@ -131,89 +149,74 @@
       messages.scrollTop = messages.scrollHeight;
     }
 
-    function showOptions(optionArray) {
-      options.innerHTML = '';
+    function showSuggestions(optionArray) {
+      suggestions.innerHTML = '';
       optionArray.forEach(opt => {
         const btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.textContent = opt.label;
+        btn.className = 'suggestion-btn';
+        btn.textContent = opt;
         btn.onclick = () => {
-          addMessage(opt.label, 'user');
-          handleOption(opt.value);
+          addMessage(opt, 'user');
+          respond(opt.toLowerCase());
         };
-        options.appendChild(btn);
+        suggestions.appendChild(btn);
       });
     }
 
-    function handleOption(value) {
-      switch (value) {
-        case 'inicio':
-          addMessage('Hola, soy el asistente virtual de Altice para el Ensanche Isabelita. ¿En qué puedo ayudarte hoy?');
-          showOptions([
-            { label: 'Problema con internet', value: 'internet' },
-            { label: 'Problema con llamadas', value: 'llamadas' },
-            { label: 'Horario de oficina', value: 'horario' },
-            { label: 'Contactar soporte', value: 'soporte' },
-            { label: 'Enviar ubicación', value: 'ubicacion' },
-          ]);
-          break;
-        case 'internet':
-          addMessage('¿Tu problema es lentitud o sin conexión?');
-          showOptions([
-            { label: 'Lentitud', value: 'lentitud' },
-            { label: 'Sin conexión', value: 'sinconexion' },
-            { label: 'Volver', value: 'inicio' }
-          ]);
-          break;
-        case 'lentitud':
-          addMessage('Reinicia tu router. Si el problema continúa, llama al 809-200-1000.');
-          showOptions([{ label: 'Volver al inicio', value: 'inicio' }]);
-          break;
-        case 'sinconexion':
-          addMessage('Verifica los cables. Si no funciona, contacta soporte Altice.');
-          showOptions([{ label: 'Contactar soporte', value: 'soporte' }, { label: 'Volver', value: 'inicio' }]);
-          break;
-        case 'llamadas':
-          addMessage('¿No puedes hacer llamadas o se cortan?');
-          showOptions([
-            { label: 'No puedo llamar', value: 'nocall' },
-            { label: 'Se corta la llamada', value: 'cortes' },
-            { label: 'Volver', value: 'inicio' }
-          ]);
-          break;
-        case 'nocall':
-          addMessage('Verifica que tengas señal y saldo. Contacta soporte si persiste.');
-          showOptions([{ label: 'Volver al inicio', value: 'inicio' }]);
-          break;
-        case 'cortes':
-          addMessage('Puede ser una falla de red. Contacta soporte Altice.');
-          showOptions([{ label: 'Contactar soporte', value: 'soporte' }, { label: 'Volver', value: 'inicio' }]);
-          break;
-        case 'horario':
-          addMessage('Altice Ensanche Isabelita abre de lunes a viernes, de 8:00 AM a 6:00 PM.');
-          showOptions([{ label: 'Volver al inicio', value: 'inicio' }]);
-          break;
-        case 'soporte':
-          addMessage('Puedes llamar al 809-200-1000 o visitar la oficina más cercana.');
-          showOptions([{ label: 'Volver al inicio', value: 'inicio' }]);
-          break;
-        case 'ubicacion':
-          addMessage('Por favor, comparte tu ubicación actual. (Simulado para fines demostrativos).');
-          showOptions([{ label: 'Ubicación enviada ✅', value: 'ubicacion_ok' }]);
-          break;
-        case 'ubicacion_ok':
-          addMessage('Gracias. Usaremos esta ubicación para revisar el problema.');
-          showOptions([{ label: 'Volver al inicio', value: 'inicio' }]);
-          break;
-        default:
-          addMessage('No entiendo esa opción.');
-          showOptions([{ label: 'Volver al inicio', value: 'inicio' }]);
-          break;
+    function respond(msg) {
+      const m = msg.toLowerCase();
+      if (m.includes('hola')) {
+        addMessage('¡Hola! ¿En qué puedo ayudarte hoy?');
+        showSuggestions(['Problema con internet', 'Problema con llamadas', 'Enviar ubicación', 'Horario de oficina']);
+      } else if (m.includes('internet')) {
+        addMessage('¿Tienes lentitud o sin conexión?');
+        showSuggestions(['Lentitud', 'Sin conexión']);
+      } else if (m.includes('lentitud')) {
+        addMessage('Reinicia tu router y verifica tu velocidad.');
+        showSuggestions(['Volver al inicio']);
+      } else if (m.includes('sin conexión')) {
+        addMessage('Revisa los cables y luz del módem. Contacta soporte si persiste.');
+        showSuggestions(['Contactar soporte', 'Volver al inicio']);
+      } else if (m.includes('llamada') || m.includes('llamadas')) {
+        addMessage('¿No puedes llamar o se corta la llamada?');
+        showSuggestions(['No puedo llamar', 'Se corta la llamada']);
+      } else if (m.includes('no puedo llamar')) {
+        addMessage('Asegúrate de tener señal y saldo.');
+        showSuggestions(['Volver al inicio']);
+      } else if (m.includes('se corta')) {
+        addMessage('Puede ser falla de red temporal.');
+        showSuggestions(['Contactar soporte', 'Volver al inicio']);
+      } else if (m.includes('ubicación')) {
+        addMessage('Por favor comparte tu ubicación. (Simulado)');
+        showSuggestions(['Ubicación enviada ✅']);
+      } else if (m.includes('horario')) {
+        addMessage('Lunes a viernes, 8:00 AM a 6:00 PM.');
+        showSuggestions(['Volver al inicio']);
+      } else if (m.includes('soporte')) {
+        addMessage('Llama al 809-200-1000 o visita tu oficina más cercana.');
+        showSuggestions(['Volver al inicio']);
+      } else if (m.includes('volver')) {
+        respond('hola');
+      } else {
+        addMessage('No entendí tu mensaje. Prueba con otra opción.');
+        showSuggestions(['Problema con internet', 'Problema con llamadas', 'Horario de oficina', 'Contactar soporte']);
       }
     }
 
-    // Iniciar conversación
-    handleOption('inicio');
+    sendBtn.onclick = () => {
+      const msg = input.value.trim();
+      if (!msg) return;
+      addMessage(msg, 'user');
+      input.value = '';
+      respond(msg);
+    };
+
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') sendBtn.click();
+    });
+
+    // Inicio automático
+    respond('hola');
   </script>
 </body>
 </html>
