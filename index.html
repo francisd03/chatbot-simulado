@@ -3,88 +3,89 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Chatbot Averías Altice - Ensanche Isabelita</title>
+<title>Chatbot Altice - Ensanche Isabelita</title>
 <style>
-  /* Reset y fuentes */
+  /* Reset básico */
   * {
     box-sizing: border-box;
   }
-  body {
+  body, html {
+    margin: 0; padding: 0; height: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #eef2f7;
-    margin: 0;
-    padding: 0;
+    background: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #chat-container {
+    background: rgba(255,255,255,0.95);
+    width: 450px;
+    max-width: 90%;
+    height: 600px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+    overflow: hidden;
   }
   header {
-    width: 100%;
-    background: #0052cc;
-    padding: 15px;
+    background: #003a75;
     color: white;
-    text-align: center;
+    padding: 18px;
     font-size: 1.5rem;
     font-weight: bold;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
+    gap: 15px;
   }
   header img {
-    height: 32px;
-  }
-  #chatbox {
-    background: white;
-    margin: 20px 0;
-    width: 420px;
-    max-width: 95%;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    display: flex;
-    flex-direction: column;
-    height: 500px;
+    height: 36px;
   }
   #messages {
     flex-grow: 1;
     padding: 20px;
     overflow-y: auto;
-    border-bottom: 1px solid #ddd;
+    background: #f9f9f9;
   }
   .message {
-    margin-bottom: 12px;
-    padding: 10px 14px;
-    border-radius: 18px;
+    margin-bottom: 14px;
+    padding: 14px 18px;
+    border-radius: 20px;
     max-width: 75%;
-    line-height: 1.3;
+    line-height: 1.4;
+    font-size: 1rem;
+    animation: fadeIn 0.5s ease forwards;
     word-wrap: break-word;
-    font-size: 0.95rem;
   }
   .user {
     background: #0052cc;
     color: white;
     align-self: flex-end;
-    border-bottom-right-radius: 4px;
+    border-bottom-right-radius: 5px;
   }
   .bot {
-    background: #f0f0f0;
+    background: #e1e1e1;
     color: #222;
     align-self: flex-start;
-    border-bottom-left-radius: 4px;
+    border-bottom-left-radius: 5px;
+  }
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
   }
   #input-area {
     display: flex;
-    padding: 15px;
-    gap: 10px;
+    padding: 18px;
     border-top: 1px solid #ddd;
+    background: white;
   }
   #input {
     flex-grow: 1;
-    font-size: 1rem;
-    padding: 10px 14px;
-    border-radius: 25px;
-    border: 1px solid #ccc;
+    font-size: 1.1rem;
+    padding: 12px 16px;
+    border-radius: 30px;
+    border: 1px solid #bbb;
     transition: border-color 0.3s;
   }
   #input:focus {
@@ -95,42 +96,37 @@
     background: #0052cc;
     border: none;
     color: white;
-    font-weight: bold;
-    font-size: 1rem;
-    padding: 0 20px;
-    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-left: 15px;
+    padding: 0 25px;
+    border-radius: 30px;
     cursor: pointer;
     transition: background-color 0.3s;
   }
   #send-btn:hover {
-    background: #003d99;
+    background: #003a75;
   }
+
   /* Responsive */
-  @media (max-width: 480px) {
-    #chatbox {
-      height: 400px;
+  @media (max-width: 500px) {
+    #chat-container {
+      height: 90vh;
       width: 100%;
+      border-radius: 0;
     }
   }
 </style>
 </head>
 <body>
-<header>
-  <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" alt="Logo Chatbot" />
-  Chatbot Averías Altice - Ensanche Isabelita
-</header>
-
-<div id="chatbox" role="main" aria-live="polite" aria-label="Chatbot de soporte para Altice en Ensanche Isabelita">
-  <div id="messages" aria-relevant="additions"></div>
+<div id="chat-container" role="main" aria-live="polite" aria-label="Chatbot Altice Ensanche Isabelita">
+  <header>
+    <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" alt="Altice Logo" />
+    Chatbot Altice - Ensanche Isabelita
+  </header>
+  <div id="messages"></div>
   <div id="input-area">
-    <input
-      type="text"
-      id="input"
-      placeholder="Escribe tu mensaje aquí..."
-      aria-label="Mensaje del usuario"
-      autocomplete="off"
-      autofocus
-    />
+    <input type="text" id="input" placeholder="Escribe aquí tu consulta..." aria-label="Mensaje usuario" autocomplete="off" autofocus />
     <button id="send-btn" aria-label="Enviar mensaje">Enviar</button>
   </div>
 </div>
@@ -140,9 +136,21 @@
   const input = document.getElementById('input');
   const sendBtn = document.getElementById('send-btn');
 
-  // Carga mensajes guardados en sessionStorage
+  // Simulación "base de datos" de preguntas y respuestas
+  const knowledgeBase = [
+    { keywords: ['internet', 'conexion', 'wifi', 'velocidad'], response: '¿Tienes problemas con la conexión a internet? Prueba reiniciar tu router y verifica cables. ¿Sigue el problema?' },
+    { keywords: ['telefono', 'llamada', 'linea'], response: 'Si tu línea telefónica presenta problemas, verifica las conexiones y si continúa, contacta soporte Altice: 809-200-1000.' },
+    { keywords: ['averia', 'falla', 'problema', 'corte'], response: 'Estamos al tanto de algunas averías en Ensanche Isabelita. Nuestro equipo trabaja para solucionarlas pronto.' },
+    { keywords: ['soporte', 'contacto', 'ayuda'], response: 'Para soporte, llama al 809-200-1000 o visita la oficina Altice en Ensanche Isabelita.' },
+    { keywords: ['horario', 'atencion'], response: 'El horario de atención en Ensanche Isabelita es lunes a viernes, 8:00 AM - 6:00 PM.' },
+    { keywords: ['gracias', 'muchas gracias'], response: '¡Gracias a ti! Estamos para ayudarte siempre.' },
+    { keywords: ['hola', 'buenos dias', 'buenas tardes'], response: '¡Hola! Bienvenido al chatbot de Altice para Ensanche Isabelita. ¿En qué puedo ayudarte?' },
+    { keywords: ['adios', 'bye', 'hasta luego'], response: '¡Hasta luego! Que tengas un buen día.' },
+  ];
+
+  // Guarda y carga mensajes de sessionStorage
   const savedMessages = JSON.parse(sessionStorage.getItem('chatMessages')) || [];
-  savedMessages.forEach(({text, sender}) => addMessage(text, sender, false));
+  savedMessages.forEach(({ text, sender }) => addMessage(text, sender, false));
 
   function saveMessages() {
     const msgs = [];
@@ -164,34 +172,14 @@
   function botResponse(msg) {
     const message = msg.toLowerCase();
 
-    // Respuestas personalizadas para fallas Altice en Ensanche Isabelita
-    if (message.includes('internet') || message.includes('conexion') || message.includes('wifi')) {
-      return 'Si tienes problemas con la conexión de internet en Ensanche Isabelita, por favor revisa que el router esté encendido y reinícialo. ¿El problema persiste?';
-    } 
-    else if (message.includes('telefono') || message.includes('llamada') || message.includes('linea')) {
-      return 'Para problemas con llamadas o línea telefónica en Ensanche Isabelita, verifica que el cable esté bien conectado. Si sigue el problema, por favor comunícate con el soporte de Altice al 809-200-1000.';
+    for (const entry of knowledgeBase) {
+      for (const keyword of entry.keywords) {
+        if (message.includes(keyword)) {
+          return entry.response;
+        }
+      }
     }
-    else if (message.includes('averia') || message.includes('falla') || message.includes('problema')) {
-      return 'Gracias por reportar la falla. Nuestro equipo de Altice en Ensanche Isabelita está trabajando para solucionar las averías. ¿Quieres que te proporcione el número de soporte?';
-    }
-    else if (message.includes('soporte') || message.includes('contacto')) {
-      return 'Puedes contactar al soporte de Altice llamando al 809-200-1000 o visitando la oficina local en Ensanche Isabelita.';
-    }
-    else if (message.includes('horario')) {
-      return 'El horario de atención del soporte Altice en Ensanche Isabelita es de lunes a viernes de 8:00 AM a 6:00 PM.';
-    }
-    else if (message.includes('gracias') || message.includes('muchas gracias')) {
-      return '¡De nada! Estamos para ayudarte.';
-    }
-    else if (message.includes('hola') || message.includes('buenos dias') || message.includes('buenas tardes')) {
-      return '¡Hola! Bienvenido al chatbot de Altice para Ensanche Isabelita. ¿En qué puedo ayudarte?';
-    }
-    else if (message.includes('adios') || message.includes('bye')) {
-      return '¡Gracias por contactarnos! Que tengas un excelente día.';
-    }
-    else {
-      return 'Disculpa, no entendí tu mensaje. Por favor, intenta preguntar sobre fallas, averías o soporte en Altice Ensanche Isabelita.';
-    }
+    return 'Disculpa, no entiendo tu consulta. Por favor pregunta sobre fallas o soporte Altice en Ensanche Isabelita.';
   }
 
   function sendMessage() {
