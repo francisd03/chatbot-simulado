@@ -3,50 +3,179 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Chatbot Simulado - Proyecto</title>
+<title>Chatbot Simulado Mejorado</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #f2f2f2; }
-  #chatbox { width: 400px; max-width: 90%; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-  #messages { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-  .message { margin-bottom: 10px; }
-  .user { color: blue; }
-  .bot { color: green; }
-  input[type="text"] { width: 80%; padding: 8px; }
-  button { padding: 8px 12px; }
+  /* Reset y fuentes */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #eef2f7;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+  header {
+    width: 100%;
+    background: #0052cc;
+    padding: 15px;
+    color: white;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  header img {
+    height: 32px;
+  }
+  #chatbox {
+    background: white;
+    margin: 20px 0;
+    width: 420px;
+    max-width: 95%;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+  }
+  #messages {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    border-bottom: 1px solid #ddd;
+  }
+  .message {
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    border-radius: 18px;
+    max-width: 75%;
+    line-height: 1.3;
+    word-wrap: break-word;
+    font-size: 0.95rem;
+  }
+  .user {
+    background: #0052cc;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .bot {
+    background: #f0f0f0;
+    color: #222;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  #input-area {
+    display: flex;
+    padding: 15px;
+    gap: 10px;
+    border-top: 1px solid #ddd;
+  }
+  #input {
+    flex-grow: 1;
+    font-size: 1rem;
+    padding: 10px 14px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s;
+  }
+  #input:focus {
+    outline: none;
+    border-color: #0052cc;
+  }
+  #send-btn {
+    background: #0052cc;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 0 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  #send-btn:hover {
+    background: #003d99;
+  }
+  /* Responsive */
+  @media (max-width: 480px) {
+    #chatbox {
+      height: 400px;
+      width: 100%;
+    }
+  }
 </style>
 </head>
 <body>
-  <div id="chatbox">
-    <div id="messages"></div>
-    <input type="text" id="input" placeholder="Escribe tu mensaje..." />
-    <button onclick="sendMessage()">Enviar</button>
+<header>
+  <img src="https://cdn-icons-png.flaticon.com/512/4712/4712027.png" alt="Logo Chatbot" />
+  Chatbot Simulado Mejorado
+</header>
+
+<div id="chatbox" role="main" aria-live="polite" aria-label="Chatbot de soporte">
+  <div id="messages" aria-relevant="additions"></div>
+  <div id="input-area">
+    <input
+      type="text"
+      id="input"
+      placeholder="Escribe tu mensaje aquí..."
+      aria-label="Mensaje del usuario"
+      autocomplete="off"
+      autofocus
+    />
+    <button id="send-btn" aria-label="Enviar mensaje">Enviar</button>
   </div>
+</div>
 
 <script>
   const messagesDiv = document.getElementById('messages');
   const input = document.getElementById('input');
+  const sendBtn = document.getElementById('send-btn');
 
-  function addMessage(text, sender) {
+  // Carga mensajes guardados en sessionStorage
+  const savedMessages = JSON.parse(sessionStorage.getItem('chatMessages')) || [];
+  savedMessages.forEach(({text, sender}) => addMessage(text, sender, false));
+
+  function saveMessages() {
+    const msgs = [];
+    document.querySelectorAll('.message').forEach(msg => {
+      msgs.push({ text: msg.textContent, sender: msg.classList.contains('user') ? 'user' : 'bot' });
+    });
+    sessionStorage.setItem('chatMessages', JSON.stringify(msgs));
+  }
+
+  function addMessage(text, sender, save = true) {
     const msgDiv = document.createElement('div');
     msgDiv.classList.add('message', sender);
     msgDiv.textContent = text;
     messagesDiv.appendChild(msgDiv);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    if (save) saveMessages();
   }
 
   function botResponse(msg) {
     const message = msg.toLowerCase();
 
     if (message.includes('hola')) {
-      return '¡Hola! ¿Cómo puedo ayudarte hoy?';
+      return '¡Hola! ¿En qué puedo ayudarte hoy?';
     } else if (message.includes('falla')) {
-      return 'Lamento que tengas una falla. ¿Puedes dar más detalles?';
+      return 'Lamento que tengas una falla. Por favor, proporciona más detalles.';
     } else if (message.includes('internet')) {
-      return '¿Tienes problemas con la conexión a internet?';
+      return '¿Estás teniendo problemas con la conexión a internet?';
     } else if (message.includes('gracias')) {
       return '¡De nada! Estoy aquí para ayudarte.';
+    } else if (message.includes('adiós') || message.includes('bye')) {
+      return '¡Hasta luego! Que tengas un buen día.';
     } else {
-      return 'Disculpa, no entiendo tu mensaje. Por favor intenta de nuevo.';
+      return 'Lo siento, no entendí eso. ¿Podrías reformularlo?';
     }
   }
 
@@ -56,14 +185,16 @@
 
     addMessage(text, 'user');
     input.value = '';
+    input.focus();
 
     setTimeout(() => {
       const reply = botResponse(text);
       addMessage(reply, 'bot');
-    }, 800);
+    }, 700);
   }
 
-  input.addEventListener('keydown', function(e) {
+  sendBtn.addEventListener('click', sendMessage);
+  input.addEventListener('keydown', e => {
     if (e.key === 'Enter') {
       sendMessage();
     }
