@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chatbot Simulado - Proyecto</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f2f2f2; }
+  #chatbox { width: 400px; max-width: 90%; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+  #messages { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+  .message { margin-bottom: 10px; }
+  .user { color: blue; }
+  .bot { color: green; }
+  input[type="text"] { width: 80%; padding: 8px; }
+  button { padding: 8px 12px; }
+</style>
+</head>
+<body>
+  <div id="chatbox">
+    <div id="messages"></div>
+    <input type="text" id="input" placeholder="Escribe tu mensaje..." />
+    <button onclick="sendMessage()">Enviar</button>
+  </div>
+
+<script>
+  const messagesDiv = document.getElementById('messages');
+  const input = document.getElementById('input');
+
+  function addMessage(text, sender) {
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('message', sender);
+    msgDiv.textContent = text;
+    messagesDiv.appendChild(msgDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+
+  function botResponse(msg) {
+    const message = msg.toLowerCase();
+
+    if (message.includes('hola')) {
+      return '¡Hola! ¿Cómo puedo ayudarte hoy?';
+    } else if (message.includes('falla')) {
+      return 'Lamento que tengas una falla. ¿Puedes dar más detalles?';
+    } else if (message.includes('internet')) {
+      return '¿Tienes problemas con la conexión a internet?';
+    } else if (message.includes('gracias')) {
+      return '¡De nada! Estoy aquí para ayudarte.';
+    } else {
+      return 'Disculpa, no entiendo tu mensaje. Por favor intenta de nuevo.';
+    }
+  }
+
+  function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage(text, 'user');
+    input.value = '';
+
+    setTimeout(() => {
+      const reply = botResponse(text);
+      addMessage(reply, 'bot');
+    }, 800);
+  }
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+</script>
+</body>
+</html>
