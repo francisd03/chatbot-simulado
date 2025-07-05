@@ -3,12 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Chatbot Altice - Ensanche Isabelita</title>
+<title>Chatbot Altice con Contexto Básico</title>
 <style>
-  /* Reset básico */
-  * {
-    box-sizing: border-box;
-  }
+  /* Misma base de estilos que antes */
+  * { box-sizing: border-box; }
   body, html {
     margin: 0; padding: 0; height: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -108,7 +106,6 @@
     background: #003a75;
   }
 
-  /* Responsive */
   @media (max-width: 500px) {
     #chat-container {
       height: 90vh;
@@ -136,17 +133,8 @@
   const input = document.getElementById('input');
   const sendBtn = document.getElementById('send-btn');
 
-  // Simulación "base de datos" de preguntas y respuestas
-  const knowledgeBase = [
-    { keywords: ['internet', 'conexion', 'wifi', 'velocidad'], response: '¿Tienes problemas con la conexión a internet? Prueba reiniciar tu router y verifica cables. ¿Sigue el problema?' },
-    { keywords: ['telefono', 'llamada', 'linea'], response: 'Si tu línea telefónica presenta problemas, verifica las conexiones y si continúa, contacta soporte Altice: 809-200-1000.' },
-    { keywords: ['averia', 'falla', 'problema', 'corte'], response: 'Estamos al tanto de algunas averías en Ensanche Isabelita. Nuestro equipo trabaja para solucionarlas pronto.' },
-    { keywords: ['soporte', 'contacto', 'ayuda'], response: 'Para soporte, llama al 809-200-1000 o visita la oficina Altice en Ensanche Isabelita.' },
-    { keywords: ['horario', 'atencion'], response: 'El horario de atención en Ensanche Isabelita es lunes a viernes, 8:00 AM - 6:00 PM.' },
-    { keywords: ['gracias', 'muchas gracias'], response: '¡Gracias a ti! Estamos para ayudarte siempre.' },
-    { keywords: ['hola', 'buenos dias', 'buenas tardes'], response: '¡Hola! Bienvenido al chatbot de Altice para Ensanche Isabelita. ¿En qué puedo ayudarte?' },
-    { keywords: ['adios', 'bye', 'hasta luego'], response: '¡Hasta luego! Que tengas un buen día.' },
-  ];
+  // Estado simple para contexto (puede ser 'normal' o 'esperando_confirmacion')
+  let conversationState = 'normal';
 
   // Guarda y carga mensajes de sessionStorage
   const savedMessages = JSON.parse(sessionStorage.getItem('chatMessages')) || [];
@@ -169,17 +157,61 @@
     if (save) saveMessages();
   }
 
+  // Función para interpretar respuestas afirmativas
+  function isAffirmative(text) {
+    const affirmatives = ['si', 'sí', 'claro', 'por supuesto', 'correcto', 'afirmativo', 'sí, por favor', 'ok'];
+    return affirmatives.some(word => text.includes(word));
+  }
+  // Función para interpretar respuestas negativas
+  function isNegative(text) {
+    const negatives = ['no', 'nop', 'negativo', 'no gracias', 'nada'];
+    return negatives.some(word => text.includes(word));
+  }
+
   function botResponse(msg) {
     const message = msg.toLowerCase();
 
-    for (const entry of knowledgeBase) {
-      for (const keyword of entry.keywords) {
-        if (message.includes(keyword)) {
-          return entry.response;
-        }
+    if (conversationState === 'esperando_confirmacion') {
+      if (isAffirmative(message)) {
+        conversationState = 'normal';
+        return 'Perfecto, te dejo el número de soporte Altice para Ensanche Isabelita: 809-200-1000. ¿Necesitas ayuda con algo más?';
+      } else if (isNegative(message)) {
+        conversationState = 'normal';
+        return 'Entendido. Si necesitas algo más, solo pregunta.';
+      } else {
+        return 'No entendí tu respuesta. Por favor, responde sí o no.';
       }
     }
-    return 'Disculpa, no entiendo tu consulta. Por favor pregunta sobre fallas o soporte Altice en Ensanche Isabelita.';
+
+    // Estado normal, buscar palabras clave
+    if (message.includes('internet') || message.includes('conexion') || message.includes('wifi') || message.includes('velocidad')) {
+      return '¿Tienes problemas con la conexión a internet? Prueba reiniciar tu router y verificar cables. ¿Sigue el problema?';
+    } 
+    else if (message.includes('telefono') || message.includes('llamada') || message.includes('linea')) {
+      return 'Para problemas con llamadas o línea telefónica, verifica las conexiones. ¿Quieres que te dé el número de soporte?';
+    }
+    else if (message.includes('averia') || message.includes('falla') || message.includes('problema') || message.includes('corte')) {
+      conversationState = 'esperando_confirmacion';
+      return 'Gracias por reportar la falla. ¿Quieres que te proporcione el número de soporte para que puedas comunicarte directamente?';
+    }
+    else if (message.includes('soporte') || message.includes('contacto')) {
+      return 'Puedes contactar al soporte de Altice llamando al 809-200-1000 o visitando la oficina local en Ensanche Isabelita.';
+    }
+    else if (message.includes('horario') || message.includes('atencion')) {
+      return 'El horario de atención en Ensanche Isabelita es lunes a viernes, 8:00 AM a 6:00 PM.';
+    }
+    else if (message.includes('gracias') || message.includes('muchas gracias')) {
+      return '¡Gracias a ti! Estoy aquí para ayudarte siempre.';
+    }
+    else if (message.includes('hola') || message.includes('buenos dias') || message.includes('buenas tardes')) {
+      return '¡Hola! Bienvenido al chatbot de Altice para Ensanche Isabelita. ¿En qué puedo ayudarte?';
+    }
+    else if (message.includes('adios') || message.includes('bye') || message.includes('hasta luego')) {
+      return '¡Hasta luego! Que tengas un excelente día.';
+    }
+    else {
+      return 'Disculpa, no entendí tu mensaje. Por favor pregunta sobre fallas, averías o soporte en Altice Ensanche Isabelita.';
+    }
   }
 
   function sendMessage() {
